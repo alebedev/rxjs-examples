@@ -10,36 +10,43 @@
 
 async function createRevision(fileId) {
     return new Promise((resolve, reject) => {
-        let _requestId;
+        let requestId;
         restClient.createRevision(fileId).then((resp) => {
-            _requestId = resp.requestId;
+            requestId = resp.requestId;
         }).catch((err) => {
             reject(err);
         }).then(() => {
-            const timeout = setTimeout(reject, SERVER_TIMEOUT);
             const successSubscription = Notificaitons.on(EVENTS.FILE_REVISION_ADD, onSuccess);
             const errorSubscription = Notificaitons.on(EVENTS.FILE_REVISION_ADD_ERROR, onError);
+            const timeout = setTimeout(onTimeout, SERVER_TIMEOUT);
 
-            function onSuccess({requestId}) {
-                if (requestId !== _requestId) return;
+            function onSuccess(result) {
+                if (result.requestId !== requestId) return;
 
                 cancelTimeout(timeout);
                 errorSubscription && errorSubscription();
-                resolve();
+                resolve(result);
             }
 
-            function onError({requestId}) {
-                if (requestId !== _requestId) return;
+            function onError(error) {
+                if (error.requestId !== requestId) return;
                 
                 cancelTimeout(timeout);
                 successSubscription && successSubscription();
-                reject();
+                reject(error);
+            }
+
+            function onTimeout() {
+                successSubscription && successSubscription();
+                errorSubscription && errorSubscription();
+                reject({errorType: 'timeout'});
             }
         });
     });
 }
 
 // =>
+// After
 
 function  createRevision(fileId) {
     let _requestId;
