@@ -1,0 +1,22 @@
+{
+  "name": "rxjs-examples",
+  "version": "1.0.0",
+  "description": "Code examples for RxJs talk",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alebedev/rxjs-examples.git"
+  },
+  "author": "Alexander Lebedev <alexander.lebedev@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alebedev/rxjs-examples/issues"
+  },
+  "homepage": "https://github.com/alebedev/rxjs-examples#readme",
+  "dependencies": {
+    "rxjs": "^5.5.6"
+  }
+}
